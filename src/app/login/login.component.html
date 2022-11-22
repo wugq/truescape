@@ -1,0 +1,12 @@
+<div>
+  <h3>Login Here</h3>
+  <form [formGroup]="loginForm" (ngSubmit)="login()">
+    <div>
+      <label for="username">UserName: demo</label>
+      <input required type="text" placeholder="Input UserName" />
+      <label for="password">Password: demo</label>
+      <input type="password" placeholder="Input Password" />
+    </div>
+    <button>Submit</button>
+  </form>
+</div>
