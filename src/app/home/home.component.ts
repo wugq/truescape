@@ -7,6 +7,8 @@ import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 import {RoomEnvironment} from 'three/examples/jsm/environments/RoomEnvironment';
 import {CSS2DRenderer} from "three/examples/jsm/renderers/CSS2DRenderer";
 import {WebGLRenderer} from "three";
+import GUI from 'lil-gui';
+
 
 @Component({
   selector: 'app-home',
@@ -40,19 +42,14 @@ export class HomeComponent implements OnInit, AfterViewInit {
   private scene?: THREE.Scene;
 
   private createControls = () => {
-    const renderer = new CSS2DRenderer();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.domElement.style.position = 'absolute';
-    renderer.domElement.style.top = '0px';
-    document.body.appendChild(renderer.domElement);
-
-    if (this.camera) {
-      this.controls = new OrbitControls(this.camera, renderer.domElement);
+    if (this.camera && this.renderer) {
+      this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
       this.controls.target.set(0, 0, 0);
       this.controls.autoRotate = true;
       this.controls.enableZoom = true;
-      this.controls.enablePan = false;
+      this.controls.enablePan = true;
+
       this.controls.update();
     }
   };
@@ -81,22 +78,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     const dracoLoader = new DRACOLoader();
     dracoLoader.setDecoderPath('js/libs/draco/gltf/');
 
-    const loader = new GLTFLoader();
-    loader.setDRACOLoader(dracoLoader);
-
-    this.loaderGLTF.load('assets/3d-assets/Terrain_Outer.gltf', (gltf: GLTF) => {
-      const model = gltf.scene;
-      model.position.set(0, 0, 0);
-      model.scale.set(0.01, 0.01, 0.01);
-      this.scene?.add(model);
-    });
-
-    this.loaderGLTF.load('assets/3d-assets/Terrain_Existing.gltf', (gltf: GLTF) => {
-      const model = gltf.scene;
-      model.position.set(0, 0, 0);
-      model.scale.set(0.01, 0.01, 0.01);
-      this.scene?.add(model);
-    });
+    this.loaderGLTF.setDRACOLoader(dracoLoader);
+    this.loadMiningStage();
 
   }
 
@@ -139,7 +122,55 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.createCamera();
     this.startRenderingLoop();
     this.createControls();
+    this.createGUI();
   }
 
+  private loadGLTF(url: string) {
+    this.loaderGLTF.load(url, (gltf: GLTF) => {
+      const model = gltf.scene;
+      model.position.set(0, 0, 0);
+      model.scale.set(0.01, 0.01, 0.01);
+      this.scene?.add(model);
+    });
+  }
 
+  private loadPreMiningStage() {
+    this.clearScene();
+    this.loadGLTF('assets/3d-assets/Terrain_Outer.gltf');
+    this.loadGLTF('assets/3d-assets/Terrain_Existing.gltf');
+  }
+
+  private loadMiningStage() {
+    this.clearScene();
+    this.loadGLTF('assets/3d-assets/Terrain_Year16.gltf');
+    this.loadGLTF('assets/3d-assets/Mining_Facilities.gltf');
+    this.loadGLTF('assets/3d-assets/Terrain_Outer.gltf');
+  }
+
+  private clearScene() {
+    if (!this.scene) {
+      return;
+    }
+
+    while (this.scene.children.length > 0) {
+      this.scene.remove(this.scene.children[0]);
+    }
+  }
+
+  private createGUI() {
+    const gui = new GUI();
+    const that = this;
+    const myObject = {
+      preMiningStage: function () {
+        that.loadPreMiningStage();
+      },
+      miningStage: function () {
+        that.loadMiningStage();
+      },
+    };
+
+    gui.add(myObject, 'preMiningStage'); // Button
+    gui.add(myObject, 'miningStage'); // Button
+
+  }
 }
