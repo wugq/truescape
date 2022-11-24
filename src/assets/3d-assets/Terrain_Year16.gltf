@@ -1,0 +1,117 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "babylon.js glTF exporter for 3dsmax 2020 v20210115.1"
+  },
+  "scene": 0,
+  "scenes": [{
+    "nodes": [0, 1]
+  }],
+  "nodes": [{
+    "mesh": 0,
+    "translation": [-0.3203125, 0.0, 17.2617188],
+    "name": "TerrainHigh_Year16",
+    "extras": {
+      "mr displacement use global settings": true,
+      "mr displacement view dependent": true,
+      "mr displacement method": 6,
+      "mr displacement smoothing on": true,
+      "mr displacement edge length": 2.0,
+      "mr displacement max displace": 20.0,
+      "mr displacement parametric subdivision level": 5
+    }
+  }, {
+    "name": "Default light"
+  }],
+  "meshes": [{
+    "primitives": [{
+      "attributes": {
+        "POSITION": 1,
+        "NORMAL": 2,
+        "TEXCOORD_0": 3,
+        "TEXCOORD_1": 4
+      },
+      "indices": 0,
+      "material": 0
+    }],
+    "name": "TerrainHigh_Year16"
+  }],
+  "accessors": [{
+    "bufferView": 0,
+    "componentType": 5125,
+    "count": 594816,
+    "type": "SCALAR",
+    "name": "accessorIndices"
+  }, {
+    "bufferView": 1,
+    "componentType": 5126,
+    "count": 594816,
+    "max": [2421.07422, 800.9774, 2421.10132],
+    "min": [-2421.07422, 456.0, -2421.117],
+    "type": "VEC3",
+    "name": "accessorPositions"
+  }, {
+    "bufferView": 1,
+    "byteOffset": 7137792,
+    "componentType": 5126,
+    "count": 594816,
+    "type": "VEC3",
+    "name": "accessorNormals"
+  }, {
+    "bufferView": 2,
+    "componentType": 5126,
+    "count": 594816,
+    "type": "VEC2",
+    "name": "accessorUVs"
+  }, {
+    "bufferView": 2,
+    "byteOffset": 4758528,
+    "componentType": 5126,
+    "count": 594816,
+    "type": "VEC2",
+    "name": "accessorUV2s"
+  }],
+  "bufferViews": [{
+    "buffer": 0,
+    "byteLength": 2379264,
+    "name": "bufferViewScalar"
+  }, {
+    "buffer": 0,
+    "byteOffset": 2379264,
+    "byteLength": 14275584,
+    "byteStride": 12,
+    "name": "bufferViewFloatVec3"
+  }, {
+    "buffer": 0,
+    "byteOffset": 16654848,
+    "byteLength": 9517056,
+    "byteStride": 8,
+    "name": "bufferViewFloatVec2"
+  }],
+  "buffers": [{
+    "uri": "Terrain_Year16.bin",
+    "byteLength": 26171904
+  }],
+  "materials": [{
+    "pbrMetallicRoughness": {
+      "baseColorTexture": {
+        "index": 0
+      },
+      "metallicFactor": 0.0,
+      "roughnessFactor": 0.450053632
+    },
+    "name": "Year16"
+  }],
+  "textures": [{
+    "sampler": 0,
+    "source": 0,
+    "name": "Year 16.jpg"
+  }],
+  "images": [{
+    "uri": "Textures/Year 16.jpg"
+  }],
+  "samplers": [{
+    "magFilter": 9729,
+    "minFilter": 9987
+  }]
+}
