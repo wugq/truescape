@@ -146,7 +146,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.createCamera();
     this.startRenderingLoop();
     this.createControls();
-    this.createGUI();
+    this.createControlPanel();
     this.setupPin();
   }
 
@@ -185,7 +185,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private createGUI() {
+  private createControlPanel() {
     const gui = new GUI();
     const that = this;
     const myObject = {
@@ -214,12 +214,24 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   public onClick(event: any) {
+    // console.log("click event: " + JSON.stringify({
+    //   "event.clientX": event.clientX,
+    //   "event.clientY": event.clientY,
+    //   "window.innerWidth": window.innerWidth,
+    //   "window.innerHeight": window.innerHeight
+    // }));
     if (!this.camera || !this.scene) {
       return;
     }
 
-    this.pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-    this.pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    let canvasWidth = this.canvasRef?.nativeElement.offsetWidth;
+    let canvasHeight = this.canvasRef?.nativeElement.offsetHeight;
+
+    this.pointer.x = (event.clientX / canvasWidth) * 2 - 1;
+    this.pointer.y = -(event.clientY / canvasHeight) * 2 + 1;
+
+    // this.pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+    // this.pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
     this.rayCaster.setFromCamera(this.pointer, this.camera);
     const intersects = this.rayCaster.intersectObjects(this.scene.children, true);
