@@ -9,15 +9,27 @@ import {CSS2DRenderer} from "three/examples/jsm/renderers/CSS2DRenderer";
 import {WebGLRenderer} from "three";
 import GUI from 'lil-gui';
 
+import { NgbModal, NgbCarouselConfig } from '@ng-bootstrap/ng-bootstrap';
+
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
+  providers: [NgbCarouselConfig],
 })
 export class HomeComponent implements OnInit, AfterViewInit {
 
   @ViewChild('canvas') private canvasRef?: ElementRef;
+  @ViewChild('photo') photoModal: any;
+  @ViewChild('video') videoModal: any;
+
+  images = [
+    "RLA1705_Year01_Flat_Small.jpg",
+    "RLA1705_Year08_Flat_Small.jpg",
+    "RLA1705_Year16_Flat_Small.jpg",
+    "RLA1705_YearFinal_Flat_Small.jpg"
+  ].map((n) => `assets/media/${n}`);
 
   @Input() public fieldOfView: number = 75;
 
@@ -117,8 +129,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     }());
   }
 
-  constructor() {
-  }
+  constructor(private modalService: NgbModal) {}
 
   ngOnInit(): void {
 
@@ -214,8 +225,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
     if (!found) {
       return;
     }
-    alert(found.object.name);
+    this.openModal(found.object.name);
   }
 
+  openModal(name: string) {
+    switch (name) {
+      case "pinA":
+        this.modalService.open(this.photoModal,  { size: 'lg' });
+        break;
+      case "pinB":
+        this.modalService.open(this.videoModal,  { size: 'lg' });
+        break;
+    }
+  }
 
 }

@@ -1,5 +1,43 @@
-<p>Hint: To move the map, press "Shift key" on keyboard,
+<p class="tips">Hint: To move the map, press "Shift key" on keyboard,
   click and hold the left mouse button and drag the map to a new place.
 </p>
+
 <canvas #canvas id="canvas" style="height: 100%; width: 100%;" (click)="onClick($event)">
 </canvas>
+
+<ng-template #photo let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Photo Carousel</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+    <ngb-carousel *ngIf="images">
+      <ng-template ngbSlide *ngFor="let image of images">
+        <div class="picsum-img-wrapper">
+          <img [src]="image" alt=""/>
+        </div>
+      </ng-template>
+    </ngb-carousel>
+
+
+  </div>
+</ng-template>
+
+
+<ng-template #video let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Video Player</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+  </div>
+  <div class="modal-body">
+
+    <video id="my_video_1" class="video-js vjs-default-skin" width="640px" height="267px" controls preload="none"
+           data-setup='{ "aspectRatio":"1920:180", "playbackRates": [1, 1.5, 2] }'>
+      <source src="assets/media/Bowdens Silver Overview.mp4" type='video/mp4'/>
+    </video>
+
+  </div>
+
+</ng-template>
+
+
