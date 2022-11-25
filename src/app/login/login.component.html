@@ -1,15 +1,24 @@
-<div>
-  <h3>Login Here</h3>
-  <img src="/assets/ui/truescape-logo-dark.png" alt="Logo">
-
-
+<div class="container">
   <form [formGroup]="loginForm" (ngSubmit)="login()">
-    <div>
-      <label for="username">UserName: demo</label>
-      <input required type="text" placeholder="Input UserName" />
-      <label for="password">Password: demo</label>
-      <input type="password" placeholder="Input Password" />
+    <div class="imgcontainer">
+      <img src="/assets/ui/truescape-logo-dark.png" alt="Logo">
     </div>
-    <button>Submit</button>
+
+    <div class="container input-container">
+      <label for="username"><b>Username</b></label>
+      <input
+        type="text"
+        placeholder="Enter Username"
+        name="username"
+        class="form-control"
+        required
+      >
+
+      <label for="password"><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" name="password" required>
+
+      <button type="submit">Login</button>
+      <p class="tips">username: demo, password: demo </p>
+    </div>
   </form>
 </div>

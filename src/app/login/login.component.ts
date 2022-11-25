@@ -19,8 +19,7 @@ export class LoginComponent {
     });
   }
   login() {
-    this.router.navigate(['home']);
 
-    console.log('login');
+    this.router.navigate(['home']);
   }
 }
