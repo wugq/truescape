@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import {Component} from '@angular/core';
+import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -8,18 +8,36 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
-  public loginForm!: FormGroup;
+  submitted = false;
+  loginForm = new FormGroup({
+    username: new FormControl(),
+    password: new FormControl(),
+  });
 
-  constructor(private formbuilder: FormBuilder, private router: Router) {}
+  constructor(private formBuilder: FormBuilder, private router: Router) {
+    this.createForm();
+  }
 
-  ngOnInit(): void {
-    this.loginForm = this.formbuilder.group({
-      username: [''],
-      password: ['', Validators.required],
+  createForm() {
+    this.loginForm = this.formBuilder.group({
+      username: ['', Validators.required],
+      password: ['', [Validators.required]],
     });
   }
-  login() {
 
-    this.router.navigate(['home']);
+  ngOnInit(): void {
+  }
+
+  get f(): { [key: string]: AbstractControl } {
+    return this.loginForm.controls;
+  }
+
+  login() {
+    this.submitted = true;
+    if (this.loginForm.invalid) {
+      return;
+    }
+    this.router.navigate(['home']).then(r => {
+    });
   }
 }
