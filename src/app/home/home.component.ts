@@ -151,7 +151,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.loaderGLTF.load(url, (gltf: GLTF) => {
       const model = gltf.scene;
       model.position.set(0, 0, 0);
-      model.scale.set(0.01, 0.01, 0.01);
+      model.scale.set(0.1, 0.1, 0.1);
       model.name = name;
       this.scene?.add(model);
     });
@@ -203,7 +203,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     const pin = new THREE.TextureLoader().load('assets/ui/Pin.svg');
     const marker = new THREE.SpriteMaterial({map: pin});
     const sprite = new THREE.Sprite(marker);
-    sprite.scale.set(10, 10, 10);
+    sprite.scale.set(50, 50, 50);
 
     sprite.position.set(x, y, z);
     sprite.name = name;
@@ -243,8 +243,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   private setupPin() {
     this.pinGroup.name = "pinGroup"
-    this.pinGroup.add(HomeComponent.createSprite("pinA", 10, 10, 10));
-    this.pinGroup.add(HomeComponent.createSprite("pinB", 50, 50, 10));
+    this.pinGroup.add(HomeComponent.createSprite("pinA", 100, 200, 10));
+    this.pinGroup.add(HomeComponent.createSprite("pinB", -100, 200, 50));
 
     this.scene?.add(this.pinGroup);
   }
