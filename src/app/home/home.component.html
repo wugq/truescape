@@ -1,2 +1,5 @@
-<p>This is Home</p>
-<canvas #canvas id="canvas" style="height: 100%; width: 100%;" ></canvas>
+<p>Hint: To move the map, press "Shift key" on keyboard,
+  click and hold the left mouse button and drag the map to a new place.
+</p>
+<canvas #canvas id="canvas" style="height: 100%; width: 100%;" (click)="onClick($event)">
+</canvas>

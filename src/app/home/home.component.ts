@@ -37,6 +37,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   private loaderGLTF = new GLTFLoader();
 
+  private rayCaster = new THREE.Raycaster();
+
+  private pointer = new THREE.Vector2();
+
+  private pinGroup = new THREE.Group();
+
   private renderer?: THREE.WebGLRenderer;
 
   private scene?: THREE.Scene;
@@ -64,6 +70,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.camera.position.x = 0;
     this.camera.position.y = 1000;
     this.camera.position.z = 0;
+    this.camera.lookAt(new THREE.Vector3(0, 0, 0));
   }
 
   private createScene() {
@@ -79,7 +86,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     dracoLoader.setDecoderPath('js/libs/draco/gltf/');
 
     this.loaderGLTF.setDRACOLoader(dracoLoader);
-    this.loadMiningStage();
+    this.loadPreMiningStage();
 
   }
 
@@ -123,6 +130,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.startRenderingLoop();
     this.createControls();
     this.createGUI();
+    this.addSprite("pinA", 10, 10, 10);
+    this.addSprite("pinB", 50, 50, 10);
   }
 
   private loadGLTF(url: string) {
@@ -138,6 +147,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.clearScene();
     this.loadGLTF('assets/3d-assets/Terrain_Outer.gltf');
     this.loadGLTF('assets/3d-assets/Terrain_Existing.gltf');
+    this.scene?.add(this.pinGroup);
   }
 
   private loadMiningStage() {
@@ -145,6 +155,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.loadGLTF('assets/3d-assets/Terrain_Year16.gltf');
     this.loadGLTF('assets/3d-assets/Mining_Facilities.gltf');
     this.loadGLTF('assets/3d-assets/Terrain_Outer.gltf');
+    this.scene?.add(this.pinGroup);
   }
 
   private clearScene() {
@@ -173,4 +184,38 @@ export class HomeComponent implements OnInit, AfterViewInit {
     gui.add(myObject, 'miningStage'); // Button
 
   }
+
+  private addSprite(name: string, x: number, y: number, z: number) {
+    const pin = new THREE.TextureLoader().load('assets/ui/Pin.svg');
+    const marker = new THREE.SpriteMaterial({map: pin});
+    const sprite = new THREE.Sprite(marker);
+    sprite.scale.set(10, 10, 10);
+
+    sprite.position.set(x, y, z);
+    sprite.name = name;
+
+    this.pinGroup.add(sprite);
+  }
+
+  public onClick(event: any) {
+    if (!this.camera || !this.scene) {
+      return;
+    }
+
+    this.pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+    this.pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    this.rayCaster.setFromCamera(this.pointer, this.camera);
+    const intersects = this.rayCaster.intersectObjects(this.scene.children, true);
+    if (intersects.length == 0) {
+      return;
+    }
+    const found = intersects.find(item => item.object.type == "Sprite");
+    if (!found) {
+      return;
+    }
+    alert(found.object.name);
+  }
+
+
 }
