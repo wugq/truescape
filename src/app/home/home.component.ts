@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, HostListener, Input, OnInit, ViewChild} from '@angular/core';
 import * as THREE from 'three';
 import {WebGLRenderer} from 'three';
 import {DRACOLoader} from 'three/examples/jsm/loaders/DRACOLoader';
@@ -262,5 +262,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.pinGroup.add(HomeComponent.createSprite("pinB", -100, 200, 50));
 
     this.scene?.add(this.pinGroup);
+  }
+
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: { target: { innerWidth: any; }; }) {
+    if (!this.camera || !this.renderer) {
+      return;
+    }
+
+    this.camera.aspect = window.innerWidth / window.innerHeight;
+    this.camera.updateProjectionMatrix();
+
+    this.renderer?.setSize(window.innerWidth, window.innerHeight);
   }
 }
