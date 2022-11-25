@@ -1,15 +1,13 @@
 import {AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import * as THREE from 'three';
+import {WebGLRenderer} from 'three';
 import {DRACOLoader} from 'three/examples/jsm/loaders/DRACOLoader';
 import {GLTF, GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader';
-import Stats from 'three/examples/jsm/libs/stats.module';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
 import {RoomEnvironment} from 'three/examples/jsm/environments/RoomEnvironment';
-import {CSS2DRenderer} from "three/examples/jsm/renderers/CSS2DRenderer";
-import {WebGLRenderer} from "three";
 import GUI from 'lil-gui';
 
-import {NgbModal, NgbCarouselConfig} from '@ng-bootstrap/ng-bootstrap';
+import {NgbCarouselConfig, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({
@@ -19,6 +17,11 @@ import {NgbModal, NgbCarouselConfig} from '@ng-bootstrap/ng-bootstrap';
   providers: [NgbCarouselConfig],
 })
 export class HomeComponent implements OnInit, AfterViewInit {
+  showTip = true;
+
+  closeTip() {
+    this.showTip = false;
+  }
 
   @ViewChild('canvas') private canvasRef?: ElementRef;
   @ViewChild('photo') photoModal: any;
@@ -175,7 +178,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
     const removeList = ['existing', 'year16', 'facilities'];
     for (let name of removeList) {
-      let found = this.scene.children.find(item=>item.name == name);
+      let found = this.scene.children.find(item => item.name == name);
       if (found) {
         this.scene.remove(found);
       }

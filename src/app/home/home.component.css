@@ -7,3 +7,9 @@
   padding: 10px;
   border-radius: 10px;
 }
+
+::ng-deep .tips .toast-header {
+  background-color: #0085ca !important;
+  color: white;
+  border-radius: calc(var(--bs-toast-border-radius) - var(--bs-toast-border-width));
+}

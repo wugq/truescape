@@ -1,6 +1,6 @@
-<p class="tips">Hint: To move the map, press "Shift key" on keyboard,
-  click and hold the left mouse button and drag the map to a new place.
-</p>
+<ngb-toast class="tips" *ngIf="showTip" header="Hint" [autohide]="false" (hidden)="closeTip()">
+  To move the map, press "Shift key" on keyboard, click and hold the left mouse button and drag the map to a new place.
+</ngb-toast>
 
 <canvas #canvas id="canvas" style="height: 100%; width: 100%;" (click)="onClick($event)">
 </canvas>
