@@ -44,6 +44,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   private controls?: OrbitControls;
 
+  private controlPanelRef?: GUI;
+
   // private model: any;
 
   private get canvas(): HTMLCanvasElement {
@@ -141,6 +143,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   }
 
+  ngOnDestroy(): void {
+    this.removeControlPanel();
+  }
+
   ngAfterViewInit() {
     this.createScene();
     this.createCamera();
@@ -186,9 +192,11 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   private createControlPanel() {
-    const gui = new GUI();
-    const that = this;
+    this.controlPanelRef = new GUI();
+    let that = this;
     const myObject = {
+      // preMiningStage: this.loadPreMiningStage, // TODO: why not work??
+      // miningStage: this.loadMiningStage,
       preMiningStage: function () {
         that.loadPreMiningStage();
       },
@@ -197,9 +205,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
       },
     };
 
-    gui.add(myObject, 'preMiningStage'); // Button
-    gui.add(myObject, 'miningStage'); // Button
+    this.controlPanelRef.add(myObject, 'preMiningStage');
+    this.controlPanelRef.add(myObject, 'miningStage');
 
+  }
+
+  private removeControlPanel() {
+    this.controlPanelRef?.destroy();
   }
 
   private static createSprite(name: string, x: number, y: number, z: number) {
