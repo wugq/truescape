@@ -13,3 +13,18 @@
   color: white;
   border-radius: calc(var(--bs-toast-border-radius) - var(--bs-toast-border-width));
 }
+
+.modal-container {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.modal-container img {
+  width: 100%;
+}
+
+.modal-container video {
+  width: 100%;
+  height: auto;
+}

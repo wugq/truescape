@@ -11,15 +11,15 @@
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
   </div>
   <div class="modal-body">
-    <ngb-carousel *ngIf="images">
-      <ng-template ngbSlide *ngFor="let image of images">
-        <div class="picsum-img-wrapper">
-          <img [src]="image" alt=""/>
-        </div>
-      </ng-template>
-    </ngb-carousel>
-
-
+    <div class="modal-container">
+      <ngb-carousel *ngIf="images">
+        <ng-template ngbSlide *ngFor="let image of images">
+          <div class="picsum-img-wrapper">
+            <img [src]="image" alt=""/>
+          </div>
+        </ng-template>
+      </ngb-carousel>
+    </div>
   </div>
 </ng-template>
 
@@ -30,11 +30,15 @@
     <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
   </div>
   <div class="modal-body">
-
-    <video id="my_video_1" class="video-js vjs-default-skin" width="640px" height="267px" controls preload="none"
-           data-setup='{ "aspectRatio":"1920:180", "playbackRates": [1, 1.5, 2] }'>
-      <source src="assets/media/Bowdens Silver Overview.mp4" type='video/mp4'/>
-    </video>
+    <div class="modal-container">
+      <video id="my_video_1"
+             class="video-js vjs-default-skin"
+             width="640px" height="360px"
+             controls preload="none"
+             data-setup='{ "aspectRatio":"1920:1080", "playbackRates": [1, 1.5, 2] }'>
+        <source src="assets/media/Bowdens Silver Overview.mp4" type='video/mp4'/>
+      </video>
+    </div>
 
   </div>
 
