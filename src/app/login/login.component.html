@@ -38,6 +38,10 @@
         </div>
       </div>
 
+      <div class="alert alert-warning" *ngIf="submitted && isSignUpFailed">
+        Signup failed!<br />{{ errorMessage }}
+      </div>
+
       <button type="submit">Login</button>
       <p class="tips">username: demo, password: demo </p>
     </div>
