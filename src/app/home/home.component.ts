@@ -56,8 +56,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   private rayCaster = new THREE.Raycaster();
 
-  private pointer = new THREE.Vector2();
-
   private pinGroup = new THREE.Group();
 
   private renderer?: THREE.WebGLRenderer;
@@ -85,12 +83,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
       this.farClippingPane
     )
     this.camera.position.x = 0;
-    this.camera.position.y = 1000;
+    this.camera.position.y = 10000;
     this.camera.position.z = 0;
     this.camera.lookAt(new THREE.Vector3(0, 0, 0));
   }
 
-  private createScene() {
+  private async createScene() {
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0xbfe3dd);
 
@@ -103,9 +101,8 @@ export class HomeComponent implements OnInit, AfterViewInit {
     dracoLoader.setDecoderPath('js/libs/draco/gltf/');
 
     this.loaderGLTF.setDRACOLoader(dracoLoader);
-    this.loadGLTF('assets/3d-assets/Terrain_Outer.gltf', 'outer');
-
-    this.loadPreMiningStage();
+    await this.loadGLTF('assets/3d-assets/Terrain_Outer.gltf', 'outer');
+    await this.loadPreMiningStage();
 
   }
 
@@ -148,7 +145,12 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.createScene();
+    this.setupMap().then(r => {
+    });
+  }
+
+  private async setupMap() {
+    await this.createScene();
     this.createCamera();
     this.startRenderingLoop();
     this.createControls();
@@ -157,24 +159,28 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }
 
   private loadGLTF(url: string, name: string) {
-    this.loaderGLTF.load(url, (gltf: GLTF) => {
-      const model = gltf.scene;
-      model.position.set(0, 0, 0);
-      model.scale.set(0.1, 0.1, 0.1);
-      model.name = name;
-      this.scene?.add(model);
+    let that = this;
+    return new Promise((res) => {
+      that.loaderGLTF.load(url, (gltf: GLTF) => {
+        const model = gltf.scene;
+        // model.position.set(0, 0, 0);
+        // model.scale.set(0.1, 0.1, 0.1);
+        model.name = name;
+        that.scene?.add(model);
+        res(name);
+      });
     });
   }
 
-  private loadPreMiningStage() {
+  private async loadPreMiningStage() {
     this.clearScene();
-    this.loadGLTF('assets/3d-assets/Terrain_Existing.gltf', 'existing');
+    await this.loadGLTF('assets/3d-assets/Terrain_Existing.gltf', 'existing');
   }
 
-  private loadMiningStage() {
+  private async loadMiningStage() {
     this.clearScene();
-    this.loadGLTF('assets/3d-assets/Terrain_Year16.gltf', 'year16');
-    this.loadGLTF('assets/3d-assets/Mining_Facilities.gltf', 'facilities');
+    await this.loadGLTF('assets/3d-assets/Terrain_Year16.gltf', 'year16');
+    await this.loadGLTF('assets/3d-assets/Mining_Facilities.gltf', 'facilities');
   }
 
   private clearScene() {
@@ -198,10 +204,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
       // preMiningStage: this.loadPreMiningStage, // TODO: why not work??
       // miningStage: this.loadMiningStage,
       preMiningStage: function () {
-        that.loadPreMiningStage();
+        that.loadPreMiningStage().then();
       },
       miningStage: function () {
-        that.loadMiningStage();
+        that.loadMiningStage().then();
       },
     };
 
@@ -218,35 +224,32 @@ export class HomeComponent implements OnInit, AfterViewInit {
     const pin = new THREE.TextureLoader().load('assets/ui/Pin.svg');
     const marker = new THREE.SpriteMaterial({map: pin});
     const sprite = new THREE.Sprite(marker);
-    sprite.scale.set(50, 50, 50);
+    sprite.scale.set(200, 200, 200);
 
     sprite.position.set(x, y, z);
     sprite.name = name;
     return sprite;
   }
 
-  public onClick(event: any) {
-    // console.log("click event: " + JSON.stringify({
-    //   "event.clientX": event.clientX,
-    //   "event.clientY": event.clientY,
-    //   "window.innerWidth": window.innerWidth,
-    //   "window.innerHeight": window.innerHeight
-    // }));
+  private findIntersects(x: number, y: number) {
     if (!this.camera || !this.scene) {
-      return;
+      return [];
     }
-
     let canvasWidth = this.canvasRef?.nativeElement.offsetWidth;
     let canvasHeight = this.canvasRef?.nativeElement.offsetHeight;
 
-    this.pointer.x = (event.clientX / canvasWidth) * 2 - 1;
-    this.pointer.y = -(event.clientY / canvasHeight) * 2 + 1;
+    let pointer = new THREE.Vector2();
 
-    // this.pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
-    // this.pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    pointer.x = (x / canvasWidth) * 2 - 1;
+    pointer.y = -(y / canvasHeight) * 2 + 1;
 
-    this.rayCaster.setFromCamera(this.pointer, this.camera);
-    const intersects = this.rayCaster.intersectObjects(this.scene.children, true);
+    this.rayCaster.setFromCamera(pointer, this.camera);
+    let list = this.rayCaster.intersectObjects(this.scene.children, true);
+    return list
+  }
+
+  public onClick(event: any) {
+    const intersects = this.findIntersects(event.clientX, event.clientY);
     if (intersects.length == 0) {
       return;
     }
@@ -270,12 +273,36 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   private setupPin() {
     this.pinGroup.name = "pinGroup"
-    this.pinGroup.add(HomeComponent.createSprite("pinA", 100, 200, 10));
-    this.pinGroup.add(HomeComponent.createSprite("pinB", -100, 200, 50));
+    const pointA = this.findPinOnTerrain(800, 400)
+    if (pointA != null) {
+      this.pinGroup.add(HomeComponent.createSprite("pinA", pointA.x, pointA.y + 100, pointA.z));
+    }
+
+    const pointB = this.findPinOnTerrain(700, 500)
+    if (pointB != null) {
+      this.pinGroup.add(HomeComponent.createSprite("pinB", pointB.x, pointB.y + 100, pointB.z));
+    }
 
     this.scene?.add(this.pinGroup);
   }
 
+  private findPinOnTerrain(x: number, y: number) {
+    if (!this.scene || !this.camera) {
+      return null;
+    }
+
+    const list = this.findIntersects(x, y);
+    if (list.length == 0) {
+      return null;
+    }
+    let found = list.find(item => {
+      return item.object.name.startsWith("Terrain")
+    });
+    if (!found) {
+      return null;
+    }
+    return found.point;
+  }
 
   @HostListener('window:resize', ['$event'])
   onResize(event: { target: { innerWidth: any; }; }) {
