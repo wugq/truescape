@@ -38,8 +38,8 @@
         </div>
       </div>
 
-      <div class="alert alert-warning" *ngIf="submitted && isSignUpFailed">
-        Signup failed!<br />{{ errorMessage }}
+      <div class="alert alert-warning" *ngIf="submitted && isSignInFailed">
+        Login failed!<br/>{{ errorMessage }}
       </div>
 
       <button type="submit">Login</button>

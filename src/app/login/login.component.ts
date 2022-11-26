@@ -9,7 +9,7 @@ import {Router} from '@angular/router';
 })
 export class LoginComponent {
   submitted = false;
-  isSignUpFailed = false;
+  isSignInFailed = false;
   errorMessage = "";
 
   loginForm = new FormGroup({
@@ -42,7 +42,7 @@ export class LoginComponent {
     }
     const {username, password} = this.loginForm.getRawValue();
     if (username != "demo") {
-      this.isSignUpFailed = true;
+      this.isSignInFailed = true;
       this.errorMessage = "username or password is not correct";
       return;
     }
